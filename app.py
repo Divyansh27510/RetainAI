@@ -232,6 +232,9 @@ if app_mode == "📊 Executive Command Center":
 # =============================================================
 # PAGE 2: GEOSPATIAL RISK MAP (DYNAMIC THEME)
 # =============================================================
+# =============================================================
+# PAGE 2: GEOSPATIAL RISK MAP (DYNAMIC THEME)
+# =============================================================
 elif app_mode == "🗺️ Geospatial Risk Map":
     st.title("🗺️ California Geospatial Churn Threat Map")
     st.markdown("Live spatial coordinates of all subscribers. Pinpoint localized competitor rollouts and network failure clusters.")
@@ -253,37 +256,34 @@ elif app_mode == "🗺️ Geospatial Risk Map":
         st.info("🔴 **Red Dots:** Critical Churn Risk\n\n🟢 **Green Dots:** Stable Retention\n\n⭕ **Bubble Size:** Monthly Billed Spend ($)")
         
     with m_col1:
-        # Universal Compatible Map (Works on both new and older Plotly versions)
-map_func = getattr(px, "scatter_map", None) or getattr(
-    px, "scatter_mapbox", None
-)
-style_key = "map_style" if hasattr(px, "scatter_map") else "mapbox_style"
-
-map_kwargs = {
-    "lat": "Latitude",
-    "lon": "Longitude",
-    "color": "Predicted_Churn_Prob",
-    "size": "Monthly Charge",
-    "color_continuous_scale": ["#00e676", "#ffcc00", "#ff4d4d"],
-    "range_color": [0.0, 1.0],
-    "hover_name": "City",
-    "hover_data": {
-        "Monthly Charge": ":$.2f",
-        "Predicted_Churn_Prob": ":.1%",
-        "Expected_Monthly_Exposure": ":$.2f",
-        "Contract": True,
-        "Latitude": False,
-        "Longitude": False,
-    },
-    "zoom": 5.2,
-    "center": {"lat": 36.7783, "lon": -119.4179},
-    style_key: t["map"],
-    "height": 600,
-}
-
-fig_map = map_func(map_df, **map_kwargs)
-fig_map.update_layout(margin=dict(t=0, b=0, l=0, r=0))
-st.plotly_chart(fig_map, use_container_width=True)
+        map_func = getattr(px, "scatter_map", None) or getattr(px, "scatter_mapbox", None)
+        style_key = "map_style" if hasattr(px, "scatter_map") else "mapbox_style"
+        
+        map_kwargs = {
+            "lat": "Latitude",
+            "lon": "Longitude",
+            "color": "Predicted_Churn_Prob",
+            "size": "Monthly Charge",
+            "color_continuous_scale": ["#00e676", "#ffcc00", "#ff4d4d"],
+            "range_color": [0.0, 1.0],
+            "hover_name": "City",
+            "hover_data": {
+                "Monthly Charge": ":$.2f",
+                "Predicted_Churn_Prob": ":.1%",
+                "Expected_Monthly_Exposure": ":$.2f",
+                "Contract": True,
+                "Latitude": False,
+                "Longitude": False
+            },
+            "zoom": 5.2,
+            "center": {"lat": 36.7783, "lon": -119.4179},
+            style_key: t["map"],
+            "height": 600
+        }
+        
+        fig_map = map_func(map_df, **map_kwargs)
+        fig_map.update_layout(margin=dict(t=0, b=0, l=0, r=0), paper_bgcolor='rgba(0,0,0,0)')
+        st.plotly_chart(fig_map, use_container_width=True)
 
 # =============================================================
 # PAGE 3: CUSTOMER 360 DIAGNOSIS
